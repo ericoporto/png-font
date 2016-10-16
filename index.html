@@ -12,8 +12,8 @@
               //the position MUST BE AN ARRAY WITH  [X,Y]
               //If you use (x,y) it WON'T WORK!!
               pngFont.drawText("hello world!", [32,32])
-              pngFont.drawText("한국어!", [48,64])
-              pngFont.drawText("日本語!", [64,96])
+              pngFont.drawText("한국어!", [48,64],"#559")
+              pngFont.drawText("日本語!", [64,96],"red")
           });
           pngFont.setup(document.getElementById("target").getContext("2d"),"unifont_9_0_02.png");
         }
@@ -27,14 +27,14 @@
         languages glyphs in unicode for pixelart javascript games.
     </header>
     <canvas id="target" width="416" height="128" style="image-rendering: pixelated"></canvas>
-<p>    
+<p>
 <div style="width:500; border: 0px; margin: 2em;">
 <pre>
   document.addEventListener(
    'pngFontLoaded',function(e){
-    pngFont.drawText("hello world!", [32,32])
-    pngFont.drawText("한국어!", [48,64])
-    pngFont.drawText("日本語!", [64,96])
+    pngFont.drawText("hello world!",[32,32])
+    pngFont.drawText("한국어!",[48,64],"#559")
+    pngFont.drawText("日本語!",[64,96],"red")
   });
   pngFont.setup(
    document.getElementById(
@@ -47,11 +47,11 @@
 <p>
     The image font used here is the <b>GNU Unifont</b>!
 
-    You can read more about in the website, which 
-    is mantained by the awesome Paul Hardy: 
+    You can read more about in the website, which
+    is mantained by the awesome Paul Hardy:
     <a href="http://unifoundry.com/unifont.html"> unifoundry.com </a> .
 </p>
-    
+
 
 </div>
     <footer>
