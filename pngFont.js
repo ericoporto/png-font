@@ -3,6 +3,8 @@
   textUTF8Array : [],
   fontUrl : null,
 
+  /** to start the pngFont writer
+  */
   setup : function(drawingContext, fontImageUrl){
     this.ctx = drawingContext;
     this.fontImage = new Image();
@@ -12,8 +14,6 @@
     }
     this.fontImage.src = fontImageUrl;
   },
-
-
 
   /** to convert str with possible unicode to array of unicode chars
   */
