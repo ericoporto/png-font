@@ -3,6 +3,8 @@
 <head>
     <meta charset=utf-8>
     <title>pngFont.js demo!</title>
+    <link rel="stylesheet" type="text/css" href="simple.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="pngFont.js"></script>
     <script>
         function onload(){
@@ -10,8 +12,8 @@
               //the position MUST BE AN ARRAY WITH  [X,Y]
               //If you use (x,y) it WON'T WORK!!
               pngFont.drawText("hello world!", [32,32])
-              pngFont.drawText("한국어!", [32,64])
-              pngFont.drawText("日本語!", [32,96])
+              pngFont.drawText("한국어!", [48,64])
+              pngFont.drawText("日本語!", [64,96])
           });
           pngFont.setup(document.getElementById("target").getContext("2d"),"unifont_9_0_02.png");
         }
@@ -19,7 +21,43 @@
 
 </head>
 <body onload="onload()">
-    <p>Canvas to demo the font!</p>
-    <canvas id="target" width="416" height="416" style="image-rendering: pixelated"></canvas>
+    <header>
+        <h1> pngFontJs</h1>
+        As tiny as possible (840kB) lib to support the majority of
+        languages glyphs in unicode for pixelart javascript games.
+    </header>
+    <canvas id="target" width="416" height="128" style="image-rendering: pixelated"></canvas>
+<p>    
+<div style="width:500; border: 0px; margin: 2em;">
+<pre>
+  document.addEventListener(
+   'pngFontLoaded',function(e){
+    pngFont.drawText("hello world!", [32,32])
+    pngFont.drawText("한국어!", [48,64])
+    pngFont.drawText("日本語!", [64,96])
+  });
+  pngFont.setup(
+   document.getElementById(
+    "target").getContext("2d"),
+   "unifont_9_0_02.png"
+  );
+</pre>
+</p>
+<h2>which font is this?</h2>
+<p>
+    The image font used here is the <b>GNU Unifont</b>!
+
+    You can read more about in the website, which 
+    is mantained by the awesome Paul Hardy: 
+    <a href="http://unifoundry.com/unifont.html"> unifoundry.com </a> .
+</p>
+    
+
+</div>
+    <footer>
+      <br>js by Érico Porto. </br>
+      <br> more info on the Github repository:
+      <a href="https://github.com/ericoporto/pngFontJs"> github.com/ericoporto/pngFontJs </a>
+    </footer>
 </body>
 </html>
