@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <title>pngFont.js demo!</title>
+    <script src="pngFont.js"></script>
+    <script>
+        function onload(){
+          document.addEventListener('pngFontLoaded',function(e){
+              //the position MUST BE AN ARRAY WITH  [X,Y]
+              //If you use (x,y) it WON'T WORK!!
+              pngFont.drawText("hello world!", [32,32])
+              pngFont.drawText("한국어!", [32,64])
+              pngFont.drawText("日本語!", [32,96])
+          });
+          pngFont.setup(document.getElementById("target").getContext("2d"),"unifont_9_0_02.png");
+        }
+    </script>
+
+</head>
+<body onload="onload()">
+    <p>Canvas to demo the font!</p>
+    <canvas id="target" width="416" height="416" style="image-rendering: pixelated"></canvas>
+</body>
+</html>
