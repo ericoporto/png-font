@@ -11,9 +11,10 @@
           document.addEventListener('pngFontLoaded',function(e){
               //the position MUST BE AN ARRAY WITH  [X,Y]
               //If you use (x,y) it WON'T WORK!!
-              pngFont.drawText("hello world!", [32,32])
-              pngFont.drawText("한국어!", [48,64],"#559")
-              pngFont.drawText("日本語!", [64,96],"red")
+              pngFont.drawText("hello world!", [32,32]);
+              pngFont.drawText("한국어!", [48,64],"#559");
+              pngFont.drawText("日本語!", [64,96],"red",2);
+              pngFont.drawText("Café",[160,40],'orange',4,'blue')
           });
           pngFont.setup(document.getElementById("target").getContext("2d"),"unifont_9_0_02.png");
         }
@@ -32,9 +33,10 @@
 <pre>
   document.addEventListener(
    'pngFontLoaded',function(e){
-    pngFont.drawText("hello world!",[32,32])
-    pngFont.drawText("한국어!",[48,64],"#559")
-    pngFont.drawText("日本語!",[64,96],"red")
+    pngFont.drawText("hello world!",[32,32]);
+    pngFont.drawText("한국어!",[48,64],"#559");
+    pngFont.drawText("日本語!",[64,96],"red",2);
+    pngFont.drawText("Café",[160,40],'orange',4,'blue');
   });
   pngFont.setup(
    document.getElementById(

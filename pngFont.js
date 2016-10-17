@@ -40,15 +40,32 @@
         16, 16);
   },
 
-  drawText : function(text,pos, color){
+  /** creates pixel art friendly canvas and return it
+  *   it's going to be used to create intermediate buffers
+  */
+  createBufferCanvas: function(width,height){
+    var buffer = document.createElement('canvas');
+    buffer.style['image-rendering']='pixelated'
+    buffer.width = width;
+    buffer.height = height;
+    var bx = buffer.getContext('2d');
+    bx.mozImageSmoothingEnabled = false;
+    bx.webkitImageSmoothingEnabled = false;
+    bx.imageSmoothingEnabled = false;
+    return buffer
+  },
+
+  /** function to draw text in a canvas.
+  *    the user show access drawText as entry point though
+  */
+  drawTextCanvas : function(ctx,text,pos, color,size){
     if(this.textDrawed!==text){
       this.textUTF8Array = this.toCharCodeArray(text);
       this.textDrawed = text;
     }
-
-    var buffer = document.createElement('canvas');
-    buffer.width = 16*this.textUTF8Array.length;
-    buffer.height = 16;
+    var width = 16*this.textUTF8Array.length;
+    var height = 16;
+    var buffer = this.createBufferCanvas(width,height);
     var bx = buffer.getContext('2d');
 
     var chrPos = [0,0];
@@ -58,15 +75,64 @@
       chrPos[0]+=16;
     }
 
-    if(typeof color !== 'undefined'){
+    if(typeof color !== 'undefined' || color !== null){
       bx.fillStyle = color
       bx.globalCompositeOperation = "source-in";
-      bx.fillRect(0, 0, buffer.width, buffer.height);
+      bx.fillRect(0, 0, width, height);
     }
 
-    this.ctx.drawImage(buffer,pos[0],pos[1]);
+    //this will resize the image if needed by using an intermediate buffer
+    if(typeof size === 'undefined' || size === null || size == 1 ){
+      ctx.drawImage(buffer,pos[0],pos[1]);
+    } else {
+      var bufferSize = this.createBufferCanvas(width*size,
+                                           height*size);
+      var bSx = bufferSize.getContext('2d');
 
+      bSx.drawImage(buffer, 0, 0, width*size , height*size);
+      ctx.drawImage(bufferSize,pos[0],pos[1]);
+    }
     return true
-  }
+  },
 
+  /** allows drawing text with shadows
+  */
+  drawTextShadow: function(text, color, size, shadowcolor){
+    if(this.textDrawed!==text){
+      this.textUTF8Array = this.toCharCodeArray(text);
+      this.textDrawed = text;
+    }
+    if(typeof size === 'undefined' || size === null){
+      size = 1
+    }
+    var width = 16*this.textUTF8Array.length*size;
+    var height = 16*size;
+    var buffer = this.createBufferCanvas(width+1,height+1);
+    var bx = buffer.getContext('2d');
+    this.drawTextCanvas(bx,text, [size,size], shadowcolor, size);
+    this.drawTextCanvas(bx,text, [0,0], color, size);
+    return buffer
+  }
+  ,
+
+  /** How to draw texts in a canvas
+  *
+  * examples:
+  *
+  * pngFont.drawText("hello world!",[32,32])
+  * pngFont.drawText("한국어!",[48,64],"#559")
+  * pngFont.drawText("hello world!",[4,4],'blue',2,'red')
+  */
+  drawText: function(text, pos, color, size,shadow){
+    if(typeof size === 'undefined' || size === null){
+      size = 1
+    }
+    if(typeof shadow === 'undefined' || shadow === null || shadow == false){
+      this.drawTextCanvas(this.ctx,text, pos, color, size);
+    } else {
+
+      this.ctx.drawImage(this.drawTextShadow(text, color, size,shadow),
+                         pos[0],pos[1]);
+    }
+  }
 };
