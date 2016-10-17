@@ -26,6 +26,16 @@
     return arrCharCode;
   },
 
+  getCharwidthFromCharcode: function(chr){
+    var xchr = (chr % 256);
+    var ychr = parseInt(chr/256);
+    var charWidth = 16;
+    if(ychr<32){
+      charWidth = 8;
+    }
+    return charWidth
+  },
+
   /** function to draw a single char
   */
   drawChr : function(ctx, img, chr,pos){
@@ -33,11 +43,14 @@
     // Than I crop this image and draw in the canvas.
     var xchar = parseInt(16 * (chr % 256));
     var ychar = parseInt(16 * parseInt(chr/256));
+    var charWidth = this.getCharwidthFromCharcode(chr)
+
     ctx.drawImage(img,
         xchar, ychar,
         16, 16,
         pos[0], pos[1],
         16, 16);
+    return charWidth
   },
 
   /** creates pixel art friendly canvas and return it
@@ -58,21 +71,20 @@
   /** function to draw text in a canvas.
   *    the user show access drawText as entry point though
   */
-  drawTextCanvas : function(ctx,text,pos, color,size){
-    if(this.textDrawed!==text){
-      this.textUTF8Array = this.toCharCodeArray(text);
-      this.textDrawed = text;
-    }
-    var width = 16*this.textUTF8Array.length;
+  drawTextCanvas : function(ctx,utf8Array,pos, color,size){
+    var width = 16*utf8Array.length;
     var height = 16;
     var buffer = this.createBufferCanvas(width,height);
     var bx = buffer.getContext('2d');
+    var charWidth=0;
+    var charTotalWidth=0;
 
     var chrPos = [0,0];
-    for(var i=0; i<this.textUTF8Array.length; i++){
-      var char = this.textUTF8Array[i];
-      this.drawChr(bx, this.fontImage,char,chrPos);
-      chrPos[0]+=16;
+    for(var i=0; i<utf8Array.length; i++){
+      var char = utf8Array[i];
+      charWidth= this.drawChr(bx, this.fontImage,char,chrPos);
+      chrPos[0]+=charWidth;
+      charTotalWidth+=charWidth;
     }
 
     if(typeof color !== 'undefined' || color !== null){
@@ -92,29 +104,73 @@
       bSx.drawImage(buffer, 0, 0, width*size , height*size);
       ctx.drawImage(bufferSize,pos[0],pos[1]);
     }
-    return true
+    return charTotalWidth
   },
 
   /** allows drawing text with shadows
   */
-  drawTextShadow: function(text, color, size, shadowcolor){
+  drawTextShadow: function(utf8Array, color, size, shadowcolor){
+
+    if(typeof size === 'undefined' || size === null){
+      size = 1
+    }
+    var charTotalWidth=0;
+    var width = 16*utf8Array.length*size;
+    var height = 16*size;
+    var buffer = this.createBufferCanvas(width+1,height+1);
+    var bx = buffer.getContext('2d');
+    this.drawTextCanvas(bx,utf8Array, [size,size], shadowcolor, size);
+    charTotalWidth=this.drawTextCanvas(bx,utf8Array, [0,0], color, size);
+    return [buffer,charTotalWidth+size]
+  }
+  ,
+
+  wrapText: function(text, wrap, size){
     if(this.textDrawed!==text){
       this.textUTF8Array = this.toCharCodeArray(text);
       this.textDrawed = text;
     }
-    if(typeof size === 'undefined' || size === null){
-      size = 1
-    }
-    var width = 16*this.textUTF8Array.length*size;
-    var height = 16*size;
-    var buffer = this.createBufferCanvas(width+1,height+1);
-    var bx = buffer.getContext('2d');
-    this.drawTextCanvas(bx,text, [size,size], shadowcolor, size);
-    this.drawTextCanvas(bx,text, [0,0], color, size);
-    return buffer
-  }
-  ,
 
+    function missingText(text, utf82DArray){
+      var flatUtf8Array = [];
+      for(var i=0; i<utf82DArray.length; i++){
+        flatUtf8Array = flatUtf8Array.concat(utf82DArray[i]);
+      }
+      var doneText = String.fromCharCode.apply(null, flatUtf8Array);
+
+      var ending = text.substring(doneText.length);
+      return ending
+    }
+
+    var wrapped2DArray = [];
+    var missing = '';
+    var width = 0;
+    var line = 0;
+    wrapped2DArray[line] = [];
+
+    for(var i=0; i<this.textUTF8Array.length; i++){
+      width += this.getCharwidthFromCharcode(this.textUTF8Array[i])*size;
+
+      if(width<wrap[0]){
+        wrapped2DArray[line].push(this.textUTF8Array[i]);
+      } else {
+
+        line++;
+        if(line*16*size>wrap[1]){
+          missing=missingText(text,wrapped2DArray)
+          return [wrapped2DArray,missing];
+          break;
+        }
+        wrapped2DArray.push([]);
+        width = this.getCharwidthFromCharcode(this.textUTF8Array[i])*size;
+        wrapped2DArray[line] = [];
+        wrapped2DArray[line].push(this.textUTF8Array[i]);
+      }
+    }
+
+    console.log(wrapped2DArray)
+    return [wrapped2DArray,missing];
+  },
   /** How to draw texts in a canvas
   *
   * examples:
@@ -123,16 +179,31 @@
   * pngFont.drawText("한국어!",[48,64],"#559")
   * pngFont.drawText("hello world!",[4,4],'blue',2,'red')
   */
-  drawText: function(text, pos, color, size,shadow){
+  drawText: function(text, pos, color, size, shadow,  wrap){
     if(typeof size === 'undefined' || size === null){
       size = 1
     }
-    if(typeof shadow === 'undefined' || shadow === null || shadow == false){
-      this.drawTextCanvas(this.ctx,text, pos, color, size);
-    } else {
-
-      this.ctx.drawImage(this.drawTextShadow(text, color, size,shadow),
-                         pos[0],pos[1]);
+    if(typeof wrap === 'undefined' || size === null){
+      wrap = [this.ctx.canvas.width-pos[0],this.ctx.canvas.height-pos[1],0]
     }
+
+    var wrapped2DArray;
+    var missing;
+    [wrapped2DArray , missing] = this.wrapText(text,wrap,size);
+
+    for(var i=0; i<wrapped2DArray.length; i++){
+      var textUTF8Array = wrapped2DArray[i];
+
+      if(typeof shadow === 'undefined' || shadow === null || shadow == false){
+        this.drawTextCanvas(this.ctx,textUTF8Array, [pos[0],pos[1]+i*16*size], color, size);
+      } else {
+        var buffer;
+        [buffer,charTotalWidth] = this.drawTextShadow(textUTF8Array, color, size,shadow)
+        this.ctx.drawImage(buffer,
+                           pos[0],pos[1]+i*16*size);
+      }
+    }
+
+    return missing
   }
 };
