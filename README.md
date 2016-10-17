@@ -34,7 +34,7 @@ Then, use `pngFont.setup` to pass the canvas 2d context and the font image.
 
 The `drawText` possible args are the following
 
-  string pngFont.drawText(text, pos, color, size, shadow,  wrap);
+    string pngFont.drawText(text, pos, color, size, shadow,  wrap);
 
 - **`text` :** a text string to write to canvas.
 
