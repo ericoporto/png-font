@@ -63,7 +63,7 @@
     buffer.height = height;
     var bx = buffer.getContext('2d');
     bx.mozImageSmoothingEnabled = false;
-    bx.webkitImageSmoothingEnabled = false;
+    //bx.webkitImageSmoothingEnabled = false;
     bx.imageSmoothingEnabled = false;
     return buffer
   },
@@ -146,29 +146,60 @@
     var missing = '';
     var width = 0;
     var line = 0;
+    var word = [];
+    var wordWidth = 0;
     wrapped2DArray[line] = [];
 
-    for(var i=0; i<this.textUTF8Array.length; i++){
-      width += this.getCharwidthFromCharcode(this.textUTF8Array[i])*size;
+    for(var i=0; i<=this.textUTF8Array.length; i++){
+      if(this.textUTF8Array[i]!=32 &&
+         i!=this.textUTF8Array.length &&
+         this.textUTF8Array[i]!=10){  //if it isn't a space, end or linefeed
+        wordWidth = wordWidth + this.getCharwidthFromCharcode(this.textUTF8Array[i])*size
+        word.push(this.textUTF8Array[i]);
 
-      if(width<wrap[0]){
-        wrapped2DArray[line].push(this.textUTF8Array[i]);
-      } else {
+      } else { //if it is
+        if(width+wordWidth<wrap[0]){ //is it smaller then right wrap area?
+          wrapped2DArray[line] = wrapped2DArray[line].concat(word).concat([32]); // it is, so add the word to line
+          width=width + wordWidth+8;
 
-        line++;
-        if(line*16*size>wrap[1]){
-          missing=missingText(text,wrapped2DArray)
-          return [wrapped2DArray,missing];
-          break;
+          if(this.textUTF8Array[i]==10){
+
+            //this code block advances a line!
+            line++;
+            if(line*16*size>=wrap[1]){ //has it reached the bottom of wrap area?
+              missing=missingText(text,wrapped2DArray)
+              return [wrapped2DArray,missing];
+              break;
+            }
+            wrapped2DArray.push([]);  //let's advance to next line!
+            width = wordWidth+8;
+            wrapped2DArray[line] = [];
+            //end of line advance code block
+          }
+
+          wordWidth = 0; //let's start a new word
+          word = [];
+        } else { //it's not smaller, so we will go back...
+
+          //this code block advances a line!
+          line++;
+          if((line+1)*16*size>=wrap[1]){ //has it reached the bottom of wrap area?
+            missing=missingText(text,wrapped2DArray)
+            return [wrapped2DArray,missing];
+            break;
+          }
+          wrapped2DArray.push([]);  //let's advance to next line!
+          width = wordWidth+8;
+          wrapped2DArray[line] = [];
+          //end of line advance code block
+
+          wrapped2DArray[line] = wrapped2DArray[line].concat(word).concat([32]);
+          wordWidth = 0; //let's start a new word
+          word = [];
         }
-        wrapped2DArray.push([]);
-        width = this.getCharwidthFromCharcode(this.textUTF8Array[i])*size;
-        wrapped2DArray[line] = [];
-        wrapped2DArray[line].push(this.textUTF8Array[i]);
       }
     }
 
-    console.log(wrapped2DArray)
     return [wrapped2DArray,missing];
   },
   /** How to draw texts in a canvas
