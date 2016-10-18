@@ -52,8 +52,8 @@ pass `null` or don't pass size for `1`.
 for no shadow.
 
 - **`wrap` :** an array of the type `[box_width, box_height, line_spacing]`,
-for wrapping the text. You can also pass `null` or don't pass wrap for using
-the canvas default wrapping.
+for word wrapping the text. You can also pass `null` or don't pass wrap for
+using the canvas default wrapping box.
 
 `drawText` will return any text it was not able to print to the canvas,
 because of wrapping limit.
