@@ -1,15 +1,15 @@
- pngFont = {
+ png_font = {
   textDrawed : [],
   textUTF8Array : [],
   fontUrl : null,
 
-  /** to start the pngFont writer
+  /** to start the png_font writer
   */
   setup : function(drawingContext, fontImageUrl){
     this.ctx = drawingContext;
     this.fontImage = new Image();
     this.fontImage.onload = function() {
-      var event = new Event('pngFontLoaded');
+      var event = new Event('png_font_loaded');
       document.dispatchEvent(event);
     }
     this.fontImage.src = fontImageUrl;
@@ -206,9 +206,9 @@
   *
   * examples:
   *
-  * pngFont.drawText("hello world!",[32,32])
-  * pngFont.drawText("한국어!",[48,64],"#559")
-  * pngFont.drawText("hello world!",[4,4],'blue',2,'red')
+  * png_font.drawText("hello world!",[32,32])
+  * png_font.drawText("한국어!",[48,64],"#559")
+  * png_font.drawText("hello world!",[4,4],'blue',2,'red')
   */
   drawText: function(text, pos, color, size, shadow,  wrap){
     if(typeof size === 'undefined' || size === null){

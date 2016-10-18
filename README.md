@@ -1,4 +1,4 @@
-# pngFontJs
+# png-font.js
 
 As tiny as possible (840kB) lib to support the majority of
 languages glyphs in unicode for pixelart js games.
@@ -10,31 +10,31 @@ The js part is made by Érico Porto.
 
 Include it in your html.
 
-    <script src="pngFont.js"></script>
+    <script src="js/pngfont.js"></script>
 
 Use a listener to know when the font image is loaded.
 
     document.addEventListener(
-     'pngFontLoaded',function(e){
-      pngFont.drawText("hello world!",[32,32]);
-      pngFont.drawText("한국어!",[48,64],"#559");
-      pngFont.drawText("日本語!",[64,96],"red",2);
-      pngFont.drawText("Café",[160,40],'orange',4,'blue');
+     'png_fontLoaded',function(e){
+      png_font.drawText("hello world!",[32,32]);
+      png_font.drawText("한국어!",[48,64],"#559");
+      png_font.drawText("日本語!",[64,96],"red",2);
+      png_font.drawText("Café",[160,40],'orange',4,'blue');
     });
 
-Then, use `pngFont.setup` to pass the canvas 2d context and the font image.
+Then, use `png_font.setup` to pass the canvas 2d context and the font image.
 
-    pngFont.setup(
+    png_font.setup(
      document.getElementById(
       "target").getContext("2d"),
      "unifont_9_0_02.png"
     );
 
-## pngFont.drawText
+## png_font.drawText
 
 The `drawText` possible args are the following
 
-    string pngFont.drawText(text, pos, color, size, shadow,  wrap);
+    string png_font.drawText(text, pos, color, size, shadow,  wrap);
 
 - **`text` :** a text string to write to canvas.
 

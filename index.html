@@ -8,16 +8,16 @@
     <script src="js/pngfont.js"></script>
     <script>
         function onload(){
-          document.addEventListener('pngFontLoaded',function(e){
+          document.addEventListener('png_font_loaded',function(e){
               //the position MUST BE AN ARRAY WITH  [X,Y]
               //If you use (x,y) it WON'T WORK!!
 
-              pngFont.drawText("hello world!", [32,32]);
-              pngFont.drawText("한국어!", [48,64],"#559");
-              pngFont.drawText("日本語!", [64,96],"red",2);
-              pngFont.drawText("Café",[160,40],'orange',4,'blue')
+              png_font.drawText("hello world!", [32,32]);
+              png_font.drawText("한국어!", [48,64],"#559");
+              png_font.drawText("日本語!", [64,96],"red",2);
+              png_font.drawText("Café",[160,40],'orange',4,'blue')
           });
-          pngFont.setup(document.getElementById("target").getContext("2d"),"img/unifont_9_0_02.png");
+          png_font.setup(document.getElementById("target").getContext("2d"),"img/unifont_9_0_02.png");
         }
     </script>
 
@@ -33,13 +33,13 @@
 <div style="width:500; border: 0px; margin: 2em;">
 <pre>
   document.addEventListener(
-   'pngFontLoaded',function(e){
-    pngFont.drawText("hello world!",[32,32]);
-    pngFont.drawText("한국어!",[48,64],"#559");
-    pngFont.drawText("日本語!",[64,96],"red",2);
-    pngFont.drawText("Café",[160,40],'orange',4,'blue');
+   'png_fontLoaded',function(e){
+    png_font.drawText("hello world!",[32,32]);
+    png_font.drawText("한국어!",[48,64],"#559");
+    png_font.drawText("日本語!",[64,96],"red",2);
+    png_font.drawText("Café",[160,40],'orange',4,'blue');
   });
-  pngFont.setup(
+  png_font.setup(
    document.getElementById(
     "target").getContext("2d"),
    "unifont_9_0_02.png"
@@ -60,7 +60,7 @@
     <footer>
       <br>js by Érico Porto. </br>
       <br> more info on the Github repository:
-      <a href="https://github.com/ericoporto/png-font"> github.com/ericoporto/pngFontJs </a>
+      <a href="https://github.com/ericoporto/png-font"> github.com/ericoporto/png-font </a>
     </footer>
 </body>
 </html>
