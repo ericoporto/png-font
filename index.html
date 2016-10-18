@@ -5,7 +5,7 @@
     <title>pngFont.js demo!</title>
     <link rel="stylesheet" type="text/css" href="simple.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="pngFont.js"></script>
+    <script src="js/pngfont.js"></script>
     <script>
         function onload(){
           document.addEventListener('pngFontLoaded',function(e){
@@ -17,7 +17,7 @@
               pngFont.drawText("日本語!", [64,96],"red",2);
               pngFont.drawText("Café",[160,40],'orange',4,'blue')
           });
-          pngFont.setup(document.getElementById("target").getContext("2d"),"unifont_9_0_02.png");
+          pngFont.setup(document.getElementById("target").getContext("2d"),"img/unifont_9_0_02.png");
         }
     </script>
 

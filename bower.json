@@ -1,0 +1,26 @@
+{
+  "name": "png-font",
+  "homepage": "https://ericoporto.github.io/pngFontJs/",
+  "authors": [
+    "Erico Vieira Porto <ericoporto2008@gmail.com>"
+  ],
+  "description": "pixel art text for html canvas, based on png image.",
+  "main": "js/pngfont.js",
+  "keywords": [
+    "pixelart",
+    "font",
+    "png"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ericoporto/pngFontJs.git"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
