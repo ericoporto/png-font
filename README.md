@@ -15,7 +15,7 @@ Include it in your html.
 Use a listener to know when the font image is loaded.
 
     document.addEventListener(
-     'png_fontLoaded',function(e){
+     'png_font_loaded',function(e){
       png_font.drawText("hello world!",[32,32]);
       png_font.drawText("한국어!",[48,64],"#559");
       png_font.drawText("日本語!",[64,96],"red",2);
