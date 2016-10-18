@@ -1,6 +1,6 @@
 {
   "name": "png-font",
-  "homepage": "https://ericoporto.github.io/pngFontJs/",
+  "homepage": "https://ericoporto.github.io/png-font/",
   "authors": [
     "Erico Vieira Porto <ericoporto2008@gmail.com>"
   ],
@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/ericoporto/pngFontJs.git"
+    "url": "git://github.com/ericoporto/png-font.git"
   },
   "license": "MIT",
   "ignore": [
