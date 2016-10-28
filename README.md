@@ -27,8 +27,11 @@ Then, use `png_font.setup` to pass the canvas 2d context and the font image.
     png_font.setup(
      document.getElementById(
       "target").getContext("2d"),
-     "unifont_9_0_02.png"
+     "unifont.png"
     );
+
+You can hide the `"unifont.png"` argument if it's located in `/img/`
+folder with the html at the root folder.
 
 ## png_font.drawText
 
@@ -61,9 +64,12 @@ because of wrapping limit.
 ## which font is this?
 
 The image font used here is the **GNU Unifont**!
+Current version here is Unifont 9.0.02 .
 
 You can read more about in the website, which is mantained
 by the awesome Paul Hardy: http://unifoundry.com/unifont.html .
+
+
 
 ## unifont AUTHORS
 
@@ -90,3 +96,23 @@ Andrew Miller drew the glyphs added to Unicode 6.3.0.
 
 For higher planes and the Private Use Area glyphs, see the
 unifont ChangeLog file.
+
+## Licensing
+
+I believe my way of embedding the GNU Unifont follows the below
+portion of it's license:
+
+>The license for the compiled fonts is covered by the above GPL terms
+with the GNU font embedding exception, as follows:
+
+    As a special exception, if you create a document which uses this font,
+    and embed this font or unaltered portions of this font into the document,
+    this font does not by itself cause the resulting document to be covered
+    by the GNU General Public License. This exception does not however
+    invalidate any other reasons why the document might be covered by the
+    GNU General Public License. If you modify this font, you may extend
+    this exception to your version of the font, but you are not obligated
+    to do so. If you do not wish to do so, delete this exception statement
+    from your version.
+
+I believe with this, it's ok to release this code as MIT [`LICENSE`](LICENSE).

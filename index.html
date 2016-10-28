@@ -17,7 +17,7 @@
               png_font.drawText("日本語!", [64,96],"red",2);
               png_font.drawText("Café",[160,40],'orange',4,'blue')
           });
-          png_font.setup(document.getElementById("target").getContext("2d"),"img/unifont_9_0_02.png");
+          png_font.setup(document.getElementById("target").getContext("2d"));
         }
     </script>
 
@@ -41,8 +41,7 @@
   });
   png_font.setup(
    document.getElementById(
-    "target").getContext("2d"),
-   "unifont_9_0_02.png"
+    "target").getContext("2d")
   );
 </pre>
 </p>
@@ -58,7 +57,7 @@
 
 </div>
     <footer>
-      <br>js by Érico Porto. </br>
+      <br>MIT License, copyright Érico Vieira Porto 2016</br>
       <br> more info on the Github repository:
       <a href="https://github.com/ericoporto/png-font"> github.com/ericoporto/png-font </a>
     </footer>

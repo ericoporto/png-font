@@ -12,6 +12,9 @@
       var event = new Event('png_font_loaded');
       document.dispatchEvent(event);
     }
+    if(typeof fontImageUrl === 'undefined'){
+      fontImageUrl = 'img/unifont.png';
+    }
     this.fontImage.src = fontImageUrl;
   },
 
