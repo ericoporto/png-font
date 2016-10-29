@@ -20,7 +20,7 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-* 
+*
 */
 
  png_font = {
@@ -30,12 +30,16 @@
 
   /** to start the png_font writer
   */
-  setup : function(drawingContext, fontImageUrl){
+  setup : function(drawingContext, fontImageUrl, callback){
+    if(typeof callback === 'undefined'){
+      callback = function(){};
+    }
     this.ctx = drawingContext;
     this.fontImage = new Image();
     this.fontImage.onload = function() {
       var event = new Event('png_font_loaded');
       document.dispatchEvent(event);
+      callback()
     }
     if(typeof fontImageUrl === 'undefined'){
       fontImageUrl = 'img/unifont.png';
