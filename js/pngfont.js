@@ -29,6 +29,11 @@
   fontUrl : null,
 
   /** to start the png_font writer
+  * png_font.setup must be ran before any write to the canvas, passing a valid
+  * canvas context with size bigger then zero, and a valid path for the image.
+  * when the image is loaded, it emits 'png_font_loaded' event and calls the
+  * callback function.
+  *
   */
   setup : function(drawingContext, fontImageUrl, callback){
     if(typeof callback === 'undefined'){
@@ -41,7 +46,7 @@
       document.dispatchEvent(event);
       callback()
     }
-    if(typeof fontImageUrl === 'undefined'){
+    if(typeof fontImageUrl === 'undefined' || fontImageUrl === null){
       fontImageUrl = 'img/unifont.png';
     }
     this.fontImage.src = fontImageUrl;
@@ -58,6 +63,9 @@
     return arrCharCode;
   },
 
+  /** Where each character width information is taken from.
+  *   It's working for unifont.png as is, but code seems a bit hacky.
+  */
   getCharwidthFromCharcode: function(chr){
     var xchr = (chr % 256);
     var ychr = parseInt(chr/256);
@@ -80,6 +88,8 @@
     return textWidth*size
   },
 
+  /** get text/char height when needed.
+  */
   getHeight: function(size){
     return size*16
   },
@@ -117,7 +127,7 @@
   },
 
   /** function to draw text in a canvas.
-  *    the user show access drawText as entry point though
+  *    the user should access drawText as entry point though
   */
   drawTextCanvas : function(ctx,utf8Array,pos, color,size){
     var width = 16*utf8Array.length;
@@ -172,6 +182,21 @@
   }
   ,
 
+  /* temporary fix for disabling word wrapping but account new lines.
+  */
+  getWrapFromText : function(text, size, pos) {
+    var lines = text.split(/\r|\r\n|\n/);
+    var linesCount = lines.length;
+    var longestLine = 0;
+    for (var i = 0; i < linesCount; i++) {
+      if (lines[i].length > longestLine) longestLine = lines[i].length;
+     }
+    return [(longestLine * size * 16) + pos[0], (linesCount * size * 16 ) + pos[1], 0];
+  }
+  ,
+
+  /* simple word wrapping
+  */
   wrapText: function(text, wrap, size){
     if(this.textDrawed!==text){
       this.textUTF8Array = this.toCharCodeArray(text);
@@ -267,15 +292,22 @@
   * png_font.drawText("한국어!",[48,64],"#559")
   * png_font.drawText("hello world!",[4,4],'blue',2,'red')
   */
-  drawText: function(text, pos, color, size, shadow,  wrap, forceResize){
+  drawText: function(text, pos, color, size, shadow,  wrap, tightenCanvas){
+    //I will define the defaults for each parameter
+    //The color default is the natural png color, unifont.png is #000000
     if(typeof size === 'undefined' || size === null){
-      size = 1
+      size = 1;
     }
-    if(typeof forceResize === 'undefined' || forceResize === null){
-      forceResize = false
+    if(typeof shadow === 'undefined' || shadow === null){
+      shadow = false;
     }
     if(typeof wrap === 'undefined' || wrap === null){
       wrap = [this.ctx.canvas.width-pos[0],this.ctx.canvas.height-pos[1],0];
+    } else if(wrap == 'nowrap' || wrap == false){
+      wrap = this.getWrapFromText(text, size, pos);
+    }
+    if(typeof tightenCanvas === 'undefined' || tightenCanvas === null){
+      tightenCanvas = false;
     }
 
     var wrapped2DArray;
@@ -285,25 +317,32 @@
 
     [wrapped2DArray , missing, minWidth, minHeight] = this.wrapText(text,wrap,size);
 
-    if(forceResize){
-      //I am adding size below to account for the shadow when present
-
-      this.ctx.canvas.width = minWidth+size*2;
-      this.ctx.width = minWidth+size*2;
-      this.ctx.canvas.height = minHeight+size*2;
-      this.ctx.height = minHeight+size*2;
+    //should resize the canvas to smallest size as possible
+    if(tightenCanvas){
+      if(!!shadow){
+        //I am adding size below to account for the shadow when present
+        this.ctx.canvas.width = minWidth+size*2;
+        this.ctx.width = minWidth+size*2;
+        this.ctx.canvas.height = minHeight+size*2;
+        this.ctx.height = minHeight+size*2;
+      } else {
+        this.ctx.canvas.width = minWidth;
+        this.ctx.width = minWidth;
+        this.ctx.canvas.height = minHeight;
+        this.ctx.height = minHeight;
+      }
     }
 
     for(var i=0; i<wrapped2DArray.length; i++){
       var textUTF8Array = wrapped2DArray[i];
 
-      if(typeof shadow === 'undefined' || shadow === null || shadow == false){
+      if(shadow == false){
         this.drawTextCanvas(this.ctx,textUTF8Array, [pos[0],pos[1]+i*16*size], color, size);
       } else {
         var buffer;
         [buffer,charTotalWidth] = this.drawTextShadow(textUTF8Array, color, size,shadow)
         this.ctx.drawImage(buffer,
-                           pos[0],pos[1]+i*16*size);
+                           pos[0], pos[1]+i*this.getHeight(size));
       }
     }
 

@@ -37,7 +37,7 @@ folder with the html at the root folder.
 
 The `drawText` possible args are the following
 
-    string png_font.drawText(text, pos, color, size, shadow,  wrap);
+    string png_font.drawText(text, pos, color, size, shadow,  wrap, tightenCanvas);
 
 - **`text` :** a text string to write to canvas.
 
@@ -56,7 +56,10 @@ for no shadow.
 
 - **`wrap` :** an array of the type `[box_width, box_height, line_spacing]`,
 for word wrapping the text. You can also pass `null` or don't pass wrap for
-using the canvas default wrapping box.
+using the canvas default wrapping box. Use `'nowrap'` or `false` to disable
+wrapping.
+
+- **`tightenCanvas` :** resize the canvas so it's just the size of the text.
 
 `drawText` will return any text it was not able to print to the canvas,
 because of wrapping limit.
