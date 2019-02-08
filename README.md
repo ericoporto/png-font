@@ -64,6 +64,10 @@ wrapping.
 `drawText` will return any text it was not able to print to the canvas,
 because of wrapping limit.
 
+## showcase
+
+- https://arc0re.itch.io/ld42
+
 ## which font is this?
 
 The image font used here is the **GNU Unifont**!
